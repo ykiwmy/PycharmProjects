@@ -38,5 +38,10 @@ def GetInfo(sheetname,selfname):
 SelfName = GetSelfName('SelfInfo')
 print(SelfName)
 Info = GetInfo('Sahara',SelfName)
+print(type(int(Info[1])))
+print(type(Info[1]))
+fp = open('test.bin','wb')
+fp.write(struct.pack('cc',chr(int(Info[1])),chr(int(Info[2]))))
+
 
 

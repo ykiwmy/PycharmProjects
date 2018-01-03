@@ -3,7 +3,7 @@ from bs4 import BeautifulSoup
 from datetime import datetime
 import re
 import json
-
+import pandas
 res = requests.get('http://news.sina.com.cn/china/')
 res.encoding = 'utf-8'
 soup = BeautifulSoup(res.text, 'html.parser')
@@ -43,5 +43,24 @@ def getNewsDetail(newsurl):
     return result
 print(1)
 print(getNewsDetail('http://news.sina.com.cn/c/nd/2017-12-24/doc-ifypyuva7207384.shtml'))
+url = 'http://api.roll.news.sina.com.cn/zt_list?' \
+      'channel=news&cat_1=gnxw&cat_2==gdxw1||=gatxw||=zs-pl||=mtjj&' \
+      'level==1||=2&show_ext=1&show_all=1&show_num=22&tag=1&format=json&' \
+      'page={}'
 
+def parseListLinks(url):
+    newsdetails = []
+    res = requests.get(url)
+    jd = json.loads(res.text.lstrip('  newsloadercallback(').rstrip(');'))
+    for ent in jd['result']['data']:
+        newsdetails.append(getNewsDetail(ent['url']))
+    return newsdetails
 
+news_total = []
+for i in range(1,3):
+    newsurl = url.format(i)
+    newsary = parseListLinks(newsurl)
+    news_total.extend(newsary)
+
+df = pandas.DataFrame(news_total)
+print(df.head())

@@ -57,10 +57,10 @@ def parseListLinks(url):
     return newsdetails
 
 news_total = []
-for i in range(1,3):
+for i in range(1, 3):
     newsurl = url.format(i)
     newsary = parseListLinks(newsurl)
     news_total.extend(newsary)
 
 df = pandas.DataFrame(news_total)
-print(df.head())
+#df.to_excel('sina.xlsx')
